@@ -1,39 +1,13 @@
-def main():
-
-    top = open("templates/top.html").read()
-    content = open("content/about.html").read()
-    bottom = open("templates/bottom.html").read()
-    full = top + content + bottom 
-    open("docs/about.html", "w+").write(full)
-
-    top = open("templates/top.html").read()
-    content = open("content/contact.html").read()
-    bottom = open("templates/bottom.html").read()
-    full = top + content + bottom 
-    open("docs/contact.html", "w+").write(full)
-
-    top = open("templates/top.html").read()
-    content = open("content/index.html").read()
-    bottom = open("templates/bottom.html").read()
-    full = top + content + bottom 
-    open("docs/index.html", "w+").write(full)
-
-    top = open("templates/top.html").read()
-    content = open("content/post.html").read()
-    bottom = open("templates/bottom.html").read()
-    full = top + content + bottom 
-    open("docs/post.html", "w+").write(full)
-    
-    pages = [
+pages = [
+    {
+        "filename": "content/index.html",
+        "output": "docs/index.html",
+        "title": "Home",
+    },
     {
         "filename": "content/about.html",
         "output": "docs/about.html",
         "title": "About Me",
-    },
-    {
-        "filename": "content/index.html",
-        "output": "docs/index.html",
-        "title": "Homepage",
     },
     {
         "filename": "content/post.html",
@@ -45,13 +19,27 @@ def main():
         "output": "docs/contact.html",
         "title": "Contact",
     },
-    ]
+]
+
+
+def apply_template(template, page_title, file_name):
+    index_content = open(file_name).read()
+    finished_index_page = template.replace("{{content}}", index_content)
+    finished_index_page = finished_index_page.replace("{{title}}", page_title)
+    return finished_index_page
     
-    for page in pages:
-        print(page)
-    
+def print_page(template, page):
+    file_name = page['filename']
+    page_output = page['output']
     page_title = page['title']
-    print(page_title)
+    
+    page_html = apply_template(template, page_title, file_name)
+    open(page_output, "w+").write(page_html)
+    
+def main():
+    template = open("templates/base.html").read()
+    for page in pages:
+        print_page(template, page)
     
 if __name__ == "__main__":
     main()
